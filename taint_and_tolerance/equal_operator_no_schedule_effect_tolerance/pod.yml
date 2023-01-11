@@ -1,0 +1,23 @@
+#assign pod to taint node
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app
+  namespace: practice
+spec:
+  containers:
+    - name: tomcat
+      image: tomcat:8.0
+      imagePullPolicy: Always
+      ports:
+      - name: tomcat-port
+        containerPort: 7500
+  tolerations:
+    - key: "mysize"
+      operator: "Equal"     # <= If we not given operator row then they bydefault take equal operator
+      value: "large"
+      effect: "NoSchedule"
+
+
+      

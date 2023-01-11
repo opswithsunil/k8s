@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: talktivepod
+  labels:
+    name: sunil
+    name: radha
+    app: webserver
+
+spec:
+  containers:
+    - name: c1
+      image: ubuntu
+      command: ["/bin/bash", "-c", "while true; do hello i am from c1 container; sleep 10; done"]
+    - name: c2
+      image: httpd
+      ports:
+        - containerPort: 80 
+

@@ -1,0 +1,64 @@
+############   persistentvolume
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: persistentvolume
+spec:
+  capacity: 
+    storage: 1Gi
+  accessModes: 
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle
+  awsElasticBlockStore:
+    volumeID: "vol-0a4f039bd0ccdcbd4"          # YAHAN APNI EBS VOLUME ID DAALO
+    fsType: ext4
+
+---
+
+############   persistentvolumeclaim
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: myebsvolumeclaim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+
+##########  use persistentvolume in deployment 
+
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: mydeploymentwithpersistentvolume
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: merror
+    
+  template:
+    metadata:
+      name: deployment-pod
+      labels:
+        env: dev
+        app: merror
+    spec:
+      containers:
+        - name: ubuntu
+          image: centos
+          command: ["/bin/bash", "-c", "while true; do echo i am from new deployment; sleep 5; done"]
+          volumeMounts:
+            - name: ebs
+              mountPath: "/tmp/persistent"
+      volumes:
+        - name: ebs
+          persistentVolumeClaim: 
+            claimName: myebsvolumeclaim
+      

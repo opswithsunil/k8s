@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv
+  namespace: practice
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle
+  awsElasticBlockStore:
+    volumeID: vol-044ab23e1d9be2ce1
+    fsType: ext4
+  storageClassName: ebsdisk
+
+---
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: ebsdisk
+  namespace: practice
+parameters:
+  type: gp2
+  fsType: ext4
+provisioner: kubernetes.io/aws-ebs
+allowVolumeExpansion: true
+reclaimPolicy: Retain
+volumeBindingMode: Immediate
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc
+  namespace: practice
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: ebsdisk
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploywithvolume
+  namespace: practice
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: merror
+      env: dev
+  template:
+    metadata:
+      name: deployment-pod
+      labels:
+        env: dev
+        app: merror
+    spec:
+      containers:
+      - name: webserver
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        volumeMounts:
+          - name: ebs
+            mountPath: /usr/share/nginx/html
+      volumes:
+        - name: ebs
+          persistentVolumeClaim:
+            claimName: pvc
+

@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploypod
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web
+
+  template:
+    metadata:
+      name: containerpod
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: c1
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysvc
+spec:
+  selector:
+    app: web
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: NodePort

@@ -1,0 +1,3 @@
+#file se data k liye ye command chalani padegi
+
+kubectl create cm cmfile --from-file=db.txt

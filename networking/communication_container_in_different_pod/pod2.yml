@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: communication-pod2
+  labels:
+    name: dev
+
+spec: 
+  containers:
+    - name: c2
+      image: ubuntu
+      command: ["/bin/bash", "-c", "while true; do echo i am from httpd container; sleep 10; done"]
+      ports:
+        - containerPort: 80

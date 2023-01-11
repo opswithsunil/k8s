@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: myreplicaset
+spec:
+  replicas: 2
+  selector:
+    matchExpressions:
+      - {key: name, operator: In, values: [sunil, munil, kunal] }
+      - {key: env, operator: NotIn, values: [prod] }
+
+  template:
+    metadata:
+      name: replica-pod
+      labels:
+        name: sunil
+        env: dev
+    spec:
+      containers:
+        - name: ubuntu-container
+          image: ubuntu
+          command: ["/bin/bash", "-c", "while true; do echo hello sunil kumar; sleep 5; done"]

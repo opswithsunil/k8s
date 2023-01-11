@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: tomcatpod
+  namespace: practice
+spec:
+  containers: 
+    - name: tomcatcont
+      image: tomcat:8.0
+      ports:
+        - name: tomcat-port
+          containerPort: 7500
+      imagePullPolicy: Always
+      envFrom:
+        - configMapRef:
+            name: cmfile

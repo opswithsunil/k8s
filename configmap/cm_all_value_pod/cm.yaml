@@ -1,0 +1,1 @@
+kubectl create cm cmfile --from-file=db.txt -n practice

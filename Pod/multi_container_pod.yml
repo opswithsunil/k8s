@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: tomcatmulticontainerpod
+spec:
+  containers:
+    - name: tomcat
+      image: tomcat:8.0
+      ports:
+        - name: tomcat-port
+          containerPort: 7500
+      imagePullPolicy: Always
+
+    - name: database
+      image: mongo:latest
+      ports:
+        - name: database-port
+          containerPort: 27017
+      imagePullPolicy: Always
+

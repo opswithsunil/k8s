@@ -1,0 +1,109 @@
+############ PV
+
+apiVersion: v1
+kind: PersistentVolume
+metadata: 
+  name: pv
+  labels:
+    tier: ebsvolume
+spec:
+  capacity:
+    storage: 2Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle
+  #storageClassName: slow
+  awsElasticBlockStore:
+    volumeID: "vol-0a4f039bd0ccdcbd4"
+    fstype: ext4
+  # claimRef:
+  #   name: pvc
+
+---
+
+###########   PVC
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: 
+  name: pvc
+  labels:
+    app: wordpress
+spec:
+  #storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  selectors:
+    tier: ebsvolume
+
+
+---
+
+################  Deployment WordPress Application
+
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: db
+  labels:
+    app: wordpress
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: wordpress
+      tier: mysql
+  strategy:
+    type: Recreate
+
+  template:
+    metadata: 
+      name: dbapplications
+      labels:
+        app: wordpress
+        tier: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:5.6
+          env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-pass
+                key: password
+          ports:
+          - name: mysql
+            containerPort: 3306
+          volumeMounts:
+            - name: ebs
+              mountPath: /var/lib/mysql
+            
+      volumes: 
+      - name: ebs
+        persistentVolumeClaim:
+          claimName: pvc
+
+---
+
+###############  Service Expose deployment wordpress applications
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: wordpressservice
+  labels:
+    app: wordpress
+spec:
+  ports:
+    - port: 3306
+      #targetPort: 80
+  selector:
+    app: wordpress
+    tier: mysql
+  type: NodePort
+

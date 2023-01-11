@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: mydeployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: merror
+    
+  template:
+    metadata:
+      name: deployment-pod
+      labels:
+        env: dev
+        app: merror
+    spec:
+      containers:
+        - name: ubuntu
+          image: centos
+          command: ["/bin/bash", "-c", "while true; do echo i am from new deployment; sleep 5; done"]
+
+

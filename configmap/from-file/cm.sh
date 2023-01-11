@@ -1,0 +1,1 @@
+kubectl create cm cmfile --from-file=db.properties --from-file=db2.properties --from-file=db3.properties --from-file=db4.properties -n practice

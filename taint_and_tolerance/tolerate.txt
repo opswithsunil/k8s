@@ -1,0 +1,54 @@
+-> if we not give operator for tolerate then they take bydefault equal operator
+
+        tolerations:
+          - effect: ""
+            key: "mysize"
+            value: "large"
+
+-> if we add effect=NoSchedule, operator=Equal then they schedular assign pod to particular node.
+
+        tolerations:
+          - effect: "NoSchedule"
+            key: "mysize"
+            operator: "Equal"
+            value: "large"
+
+-> if we add effect=NoSchedule, operator=Exists then pod assign to any node ,not to perticular node.
+
+        tolerations:
+          - effect: "NoSchedule"
+            key: "mysize"
+            operator: "Exists"
+            value: "large"
+
+-> if we are not given effect=""  then schedular tolerate all three effect NoSchedule, NoExecute and PreferNoSchedule
+
+        tolerations:
+          - effect: ""
+            key: "mysize"
+            operator: "Equal"
+            value: "large"
+
+
+-> if we not given value in pod then schedular match "key" and any thing have value then they assign pod to match "key" node
+
+        tolerations:
+          - effect: "NoSchedule"
+            key: "mysize"
+            operator: "Exists"
+
+-> if we are not given key: "" and give operator is Exists then they tolerate anything 
+
+        tolerations:
+          - effect: ""
+            key: ""
+            operator: "Exists"
+
+-> if we define tolerationSeconds: in tolerations defination or block then they staytune pod for given time
+
+        tolerations:
+          - key: "key1"
+            operator: "Equal"
+            value: "value1"
+            effect: "NoExecute"
+            tolerationSeconds: 3600

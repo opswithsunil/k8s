@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: port-pod
+  labels:
+    name: portpod
+    env: dev
+    repo: github
+spec:
+  containers:
+    - name: httpdcontainer
+      image: httpd
+      ports:
+        - containerPort: 80

@@ -1,0 +1,4 @@
+db_name="db"
+db_user="sunil"
+db_pass="Redhat123"
+db_endpoint="192.168.12.89"
