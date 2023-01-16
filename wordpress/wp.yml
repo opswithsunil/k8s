@@ -25,11 +25,15 @@ spec:
           env:
             - name: WORDPRESS_DB_HOST
               value: mysql-svc
+            # - name: WORDPRESS_DB_PASSWORD
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: mysql-pass
+            #       key: password
+
             - name: WORDPRESS_DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mysql-pass
-                  key: password
+              value: password
+
           ports:
             - name: wordpress
               containerPort: 80
@@ -41,3 +45,26 @@ spec:
         - name: wordpress-persistent-storage
           persistentVolumeClaim:
             claimName: wp-pvc
+
+---
+
+#################################   SVC
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: wp-svc
+  namespace: practice
+  labels:
+    app: wordpress
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+  selector:
+    app: wordpress
+    tier: frontend
+  type: LoadBalancer
+
+

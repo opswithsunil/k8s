@@ -12,6 +12,7 @@ spec:
       tier: mysql
   strategy:
     type: Recreate
+  replicas: 1
 
   template:
     metadata:
@@ -22,12 +23,18 @@ spec:
       containers:
         - name: mysql
           image: mysql:5.6
+          # env:
+          #   - name: MYSQL_ROOT_PASSWORD
+          #     valueFrom:
+          #       secretKeyRef:
+          #         name: mysql-pass
+          #         key: password
+
           env:
             - name: MYSQL_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mysql-pass
-                  key: password
+              value: password
+
+
           ports:
             - name: mysql
               containerPort: 3306 
@@ -42,3 +49,24 @@ spec:
         - name: mysql-persistent-storage
           persistentVolumeClaim:
             claimName: mysql-pvc
+
+---
+
+###############################   SVC
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-svc
+  namespace: practice
+  labels:
+    app: wordpress
+spec:
+  ports:
+    - name: mysql-port
+      port: 3306
+      targetPort: 3306
+  selector:
+    app: wordpress
+    tier: mysql
+  clusterIP: None

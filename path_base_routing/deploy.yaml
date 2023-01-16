@@ -1,0 +1,59 @@
+#################################    Green
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: green-app
+  namespace: color-app
+  labels:
+    app: green-app
+spec:
+  selector:
+    matchLabels:
+      app: green-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: green-app
+    spec:
+      containers:
+      - name: green-container
+        image: sunilkumawat/green_webpage:v1
+        ports:
+            - containerPort: 80
+        resources:
+          limits:
+            memory: "100Mi"
+            cpu: "200m"
+
+---
+
+##################################    Yellow
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yellow-app
+  namespace: color-app
+  labels:
+    app: yellow-app
+spec:
+  selector:
+    matchLabels:
+      app: yellow-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: yellow-app
+    spec:
+      containers:
+      - name: yellow-container
+        image: sunilkumawat/yellow_webpage:v1
+        ports:
+            - containerPort: 80
+        resources:
+          limits:
+            memory: "100Mi"
+            cpu: "200m"

@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata: 
-  name: mydeployment
+  name: deploy
+  namespace: practice
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      name: deployment
+      name: webserver
 
   template: 
     metadata: 
       name: deploymentpod
       labels:
-        name: deployment
+        name: webserver
     spec:
       containers:
         - name: c1
-          image: httpd
+          image: nginx:latest
           ports:
           - containerPort: 80
-
-
-          
+      # nodeSelector:
+      #   region: ap-south-1a
