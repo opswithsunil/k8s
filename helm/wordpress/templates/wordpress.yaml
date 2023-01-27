@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress
+  labels:
+    app: {{.Values.wordpress.labels.app}}
+spec:
+  selector:
+    matchLabels:
+      app: {{.Values.wordpress.selector.app}}
+      tier: {{.Values.wordpress.selector.tier}}
+  strategy: 
+    type: {{.Values.wordpress.strategy_type}}
+  
+  template:
+    metadata:
+      labels:
+        app: {{.Values.wordpress.selector.app}}
+        tier: {{.Values.wordpress.selector.tier}}
+    spec:
+      containers:
+        - name: wordpress
+          image: {{.Values.wordpress.image}}
+          env:
+            - name: {{.Values.wordpress.env.wp_host_name}}
+              value: {{.Values.wordpress.env.host_value}}
+            # - name: WORDPRESS_DB_PASSWORD
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: mysql-pass
+            #       key: password
+
+            - name: {{.Values.wordpress.env.wp_host_pwd}}
+              value: {{.Values.wordpress.env.host_pwd_value}}
+
+          ports:
+            - name: wordpress
+              containerPort: 80
+          volumeMounts:
+            - name: wordpress-persistent-storage
+              mountPath: {{.Values.wordpress.volumeMounts.mountPath}}
+
+      volumes:
+        - name: wordpress-persistent-storage
+          persistentVolumeClaim:
+            claimName: {{.Values.wordpress.volumes.claimName}}
+
+---
+
+#################################   SVC
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{.Values.wordpress.service.name}}
+  labels:
+    app: {{.Values.wordpress.service.labels}}
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+  selector:
+    app: {{.Values.wordpress.service.selector.app}}
+    tier: {{.Values.wordpress.service.selector.tier}}
+  type: {{.Values.wordpress.service.type}}
+
+

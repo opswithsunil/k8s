@@ -1,0 +1,40 @@
+################################   MySql
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: 
+  name: {{.Values.mysql.PersistentVolumeClaim.name}}
+  labels:
+    app: {{.Values.mysql.PersistentVolumeClaim.labels}}
+spec:
+  accessModes:
+    - {{.Values.mysql.PersistentVolumeClaim.accessModes}}
+  resources:
+    requests:
+      storage: {{.Values.mysql.PersistentVolumeClaim.storage}}
+  storageClassName: {{.Values.mysql.PersistentVolumeClaim.storageClassName}} 
+  volumeMode: {{.Values.mysql.PersistentVolumeClaim.Filesystem}}    
+  volumeName: {{.Values.mysql.PersistentVolumeClaim.volumeName}}      
+
+---
+
+################################  WP
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: 
+  name: {{.Values.wp.PersistentVolumeClaim.name}}
+  labels:
+    app: {{.Values.wp.PersistentVolumeClaim.labels}}
+spec:
+  accessModes:
+    - {{.Values.wp.PersistentVolumeClaim.accessModes}}
+  resources:
+    requests:
+      storage: {{.Values.wp.PersistentVolumeClaim.storage}}
+  storageClassName: {{.Values.wp.PersistentVolumeClaim.storageClassName}} 
+  volumeMode: {{.Values.wp.PersistentVolumeClaim.Filesystem}}    
+  volumeName: {{.Values.wp.PersistentVolumeClaim.volumeName}}      
+
+
+  
