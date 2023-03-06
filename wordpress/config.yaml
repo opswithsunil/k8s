@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm
+data:
+  WORDPRESS_DB_HOST: "test-database.c7rh2cksjiyp.ap-south-1.rds.amazonaws.com:3306"
+  WORDPRESS_DB_NAME: "testdb"
+  #WORDPRESS_DB_PASSWORD: "Redhat123"
+  #WORDPRESS_DB_USER: "sunil"
+
+

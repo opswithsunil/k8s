@@ -14,3 +14,9 @@ spec:
       envFrom:
         - configMapRef:
             name: cmfile
+
+
+
+
+
+

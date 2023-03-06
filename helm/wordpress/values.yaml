@@ -1,0 +1,152 @@
+###############################  pv
+
+#>>>>>>>>>>  mysql
+
+mysql:
+  persistentvolume:
+    name: mysql_pv
+    labels: local
+    accessModes: ReadWriteOnce
+    storage: 1Gi
+    persistentVolumeReclaimPolicy: Recycle
+    storageClassName: ""
+    volumeMode: Filesystem
+    path: /tmp/data/pv_1
+
+#>>>>>>>>>>>  wp
+
+wp:
+  persistentvolume:
+    name: wp_pv
+    labels: local
+    accessModes: ReadWriteOnce
+    storage: 1
+    persistentVolumeReclaimPolicy: Recycle
+    storageClassName: ""
+    volumeMode: Filesystem
+    path: /tmp/data/pv_2
+
+##############################   pvc
+
+#>>>>>>>>   mysql
+mysql:
+  PersistentVolumeClaim:
+    name: mysql_pvc
+    labels: wordpress
+    accessModes: ReadWriteOnce
+    storage: 1Gi
+    storageClassName: ""
+    volumeMode: Filesystem
+    volumeName: mysql_pv
+
+#>>>>>>  wp    
+wp:
+  PersistentVolumeClaim:
+    name: wp_pvc
+    labels: wordpress
+    accessModes: ReadWriteOnce
+    storage: 1Gi
+    storageClassName: ""
+    volumeMode: Filesystem
+    volumeName: wp_pv
+
+###################################  secrets
+
+secret:
+  name: mysql_pass
+  data:
+    password: cGFzc3dvcmQK
+
+
+
+################################  mysql
+
+#>>>>>>>    Deployment
+
+mysql: 
+  deployment:
+    name: mysql
+    labels: wordpress
+    matchLabels:
+      app: wordpress
+      tier: mysql
+    strategy_type: Recreate
+    replicas: 1
+    image: mysql:5.6
+    env:
+      name: MYSQL_ROOT_PASSWORD
+      value: password
+    volumeMounts: 
+      mountPath: /var/lib/mysql
+    volumes:
+      claimName: mysql_pvc
+      
+#>>>>>>>>  svc
+  service:
+    name: mysql_svc
+    labels: wordpress
+    selector:
+      app: wordpress
+      tier: mysql
+    type: clusterIP
+
+
+################################  wordpress
+
+#>>>>>>>    Deployment
+
+wordpress:
+  labels:
+    app: wordpress
+  selector:
+    app: wordpress
+    tier: frontend
+  strategy_type: Recreate
+  image: wordpress:4.8-apache
+  env:
+    wp_host_name: WORDPRESS_DB_HOST
+    host_value: mysql_svc
+    wp_host_pwd: WORDPRESS_DB_PASSWORD
+    host_pwd_value: password
+  volumeMounts:
+    mountPath: /var/www/html
+  volumes:
+    claimName: wp_pvc
+
+#>>>>>>>>    svc
+
+  service:
+    name: wp_svc
+    labels: wordpress
+    selector:
+      app: wordpress
+      tier: frontend
+    type: NodePort
+  
+
+##################################   Ingress
+
+ingress:
+  name: wordpress_ingress
+  labels: wordpress
+  annotations:
+    ingress_class: alb
+    scheme: internet-facing
+    target_type: ip
+    healthcheck_protocol: HTTP
+    healthcheck_port: traffic-port
+    healthcheck_interval_seconds: '15'
+    healthcheck_timeout_seconds: '5'
+    success_codes: '200'
+    healthy_threshold_count: '2'
+    unhealthy_threshold_count: '2'
+  paths:
+    path: /
+    pathType: Prefix
+    backend:
+      service:
+        port:
+          number: 80
+
+
+          

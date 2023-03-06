@@ -1,0 +1,20 @@
+piVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.Values.web.podname}}
+spec:
+  replicas: {{.Values.web.replicas}}
+  selector:
+    matchLabels:
+      app: {{.Values.web.labels}}
+
+  template:
+    metadata:
+      labels:
+        app: {{.Values.web.labels}}
+    spec:
+      containers:
+      - name: c1
+        image: nginx:alpine
+        ports:
+        - containerPort: 80

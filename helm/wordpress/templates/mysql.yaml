@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: {{.Values.mysql.deployment.name}}
+  labels:
+    app: {{.Values.mysql.deployment.labels}}
+spec:
+  selector:
+    matchLabels:
+      app: {{.Values.mysql.deployment.matchLabels.app}}
+      tier: {{.Values.mysql.deployment.matchLabels.tier}}
+  strategy:
+    type: {{.Values.mysql.deployment.strategy_type}}
+  replicas: {{.Values.mysql.deployment.replicas}}
+
+  template:
+    metadata:
+      labels:
+        app: {{.Values.mysql.deployment.matchLabels.app}}
+        tier: {{.Values.mysql.deployment.matchLabels.tier}}
+    spec:
+      containers:
+        - name: mysql
+          image: {{.Values.mysql.deployment.image}}
+          # env:
+          #   - name: MYSQL_ROOT_PASSWORD
+          #     valueFrom:
+          #       secretKeyRef:
+          #         name: mysql-pass
+          #         key: password
+
+          env:
+            - name: {{.Values.mysql.deployment.env.name}}
+              value: {{.Values.mysql.deployment.env.value}}
+
+
+          ports:
+            - name: mysql
+              containerPort: 3306 
+          livenessProbe:
+            tcpSocket:
+              port: 3306
+          volumeMounts:
+            - name: mysql-persistent-storage
+              mountPath: {{.Values.mysql.deployment.volumeMounts.mountPath}}
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: {{.Values.mysql.deployment.volumes.claimName}}
+
+---
+
+###############################   SVC
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{.Values.mysql.service.name}}
+  labels:
+    app: {{.Values.mysql.service.labels}}
+spec:
+  ports:
+    - name: mysql-port
+      port: 3306
+      targetPort: 3306
+  selector:
+    app: {{.Values.mysql.service.selector.app}}
+    tier: {{.Values.mysql.service.selector.tier}}
+  type: {{.Values.mysql.service.type}}

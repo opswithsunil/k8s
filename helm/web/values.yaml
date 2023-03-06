@@ -1,0 +1,9 @@
+web:
+  podname: web
+  replicas: 2
+  labels: web
+
+service:
+  svc_pod_name: mysvc
+  svc_port: 80
+  type: NodePort

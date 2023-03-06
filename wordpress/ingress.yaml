@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: mysql-ingress
-  namespace: practice
+  #namespace: practice
   labels:
     app: wordpress
   annotations:

@@ -1,23 +1,22 @@
-################################   MySql
+# ################################   MySql
 
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata: 
-  name: mysql-pvc
-  namespace: practice
-  labels:
-    app: wordpress
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-  storageClassName: "" 
-  volumeMode: Filesystem    
-  volumeName: mysql-pv      
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata: 
+#   name: mysql-pvc
+#   labels:
+#     app: wordpress
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 1Gi
+#   storageClassName: "" 
+#   volumeMode: Filesystem    
+#   volumeName: mysql-pv      
 
----
+# ---
 
 ################################  WP
 
@@ -25,7 +24,6 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata: 
   name: wp-pvc
-  namespace: practice
   labels:
     app: wordpress
 spec:
@@ -33,7 +31,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
+      storage: 2Gi
   storageClassName: "" 
   volumeMode: Filesystem    
   volumeName: wp-pv      

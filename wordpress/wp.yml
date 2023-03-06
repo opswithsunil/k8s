@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: wordpress
-  namespace: practice
   labels:
     app: wordpress
 spec:
@@ -21,19 +20,12 @@ spec:
     spec:
       containers:
         - name: wordpress
-          image: wordpress:4.8-apache
-          env:
-            - name: WORDPRESS_DB_HOST
-              value: mysql-svc
-            # - name: WORDPRESS_DB_PASSWORD
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: mysql-pass
-            #       key: password
-
-            - name: WORDPRESS_DB_PASSWORD
-              value: password
-
+          image: wordpress:latest          
+          envFrom:
+            - secretRef:
+                name: secret
+            - configMapRef:
+                name: cm
           ports:
             - name: wordpress
               containerPort: 80
@@ -54,7 +46,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: wp-svc
-  namespace: practice
   labels:
     app: wordpress
 spec:
@@ -65,6 +56,6 @@ spec:
   selector:
     app: wordpress
     tier: frontend
-  type: NodePort
+  type: LoadBalancer
 
 

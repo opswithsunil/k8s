@@ -1,0 +1,40 @@
+########################   MySql
+#
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{.Values.mysql.persistentvolume.name}}
+  labels:
+    type: {{.Values.mysql.persistentvolume.labels}}
+spec:
+  accessModes:
+    - {{.Values.mysql.persistentvolume.accessmode}}         # ReadWriteOnce, ReadOnlyMany, ReadWriteMany, ReadWriteOncePod
+  capacity: 
+    storage: {{.Values.mysql.persistentvolume.storage}}
+  persistentVolumeReclaimPolicy: {{.Values.mysql.persistentvolume.persistentVolumeReclaimPolicy}}    # Retain -> manual reclamation, Recycle -> basic scrub (rm -rf /thevolume/*), Delete -- associated storage asset such as AWS EBS, GCE PD, Azure Disk, or OpenStack Cinder volume is deleted
+  storageClassName: {{.Values.mysql.persistentvolume.storageClassName}}
+  volumeMode: {{.Values.mysql.persistentvolume.volumeMode}}      # Kubernetes supports two volumeModes of PersistentVolumes: "Filesystem" and "Block"
+  hostPath:
+    path: {{.Values.mysql.persistentvolume.path}}  
+
+---
+
+###########################    WP
+#
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{.Values.wp.persistentvolume.name}}
+  labels:
+    type: {{.Values.wp.persistentvolume.labels}}
+spec:
+  accessModes:
+    - {{.Values.wp.persistentvolume.accessmode}}         # ReadWriteOnce, ReadOnlyMany, ReadWriteMany, ReadWriteOncePod
+  capacity: 
+    storage: {{.Values.wp.persistentvolume.storage}}
+  persistentVolumeReclaimPolicy: {{.Values.wp.persistentvolume.persistentVolumeReclaimPolicy}}    # Retain -> manual reclamation, Recycle -> basic scrub (rm -rf /thevolume/*), Delete -- associated storage asset such as AWS EBS, GCE PD, Azure Disk, or OpenStack Cinder volume is deleted
+  storageClassName: {{.Values.wp.persistentvolume.storageClassName}}
+  volumeMode: {{.Values.wp.persistentvolume.volumeMode}}      # Kubernetes supports two volumeModes of PersistentVolumes: "Filesystem" and "Block"
+  hostPath:
+    path: {{.Values.wp.persistentvolume.path}}  
+
