@@ -1,0 +1,40 @@
+################################    Green
+
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: color-app
+  name: green-service
+  labels:
+    app: green-app
+  annotations:
+    alb.ingress.kubernetes.io/healthcheck-path: /index.html
+spec:
+  type: NodePort
+  selector:
+    app: green-app
+  ports:
+    - port: 80
+      targetPort: 80
+
+---
+
+###############################     Yellow
+
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: color-app
+  name: yellow-service
+  labels:
+    app: yellow-app
+  annotations:
+    alb.ingress.kubernetes.io/healthcheck-path: /index.html
+spec:
+  type: NodePort
+  selector:
+    app: yellow-app
+  ports:
+    - port: 80
+      targetPort: 80
+     
