@@ -1,0 +1,37 @@
+To start, we’ll create a number of namespaces that we’ll grant access to via the Kubernetes Role-Based Access Control (RBAC) resources
+
+We’ll then create a service account in the test namespace:
+
+
+Scenario 1: Role and roleBinding
+
+	-> We’ll start with a simple example that creates a role and a role binding to grant the service account access to the test namespace:
+	-> This example is easy to understand. All of our resources (the service account, role, and role binding) are in the test namespace. The role grants access to all resources
+	   and the role binding links the service account and the role together. As you would expect, requests made by the service account against resources in the test namespace work:
+	
+	
+Scenario 2: Role and RoleBinding in another namespace
+
+	-> Let’s now create a new role and role binding in the namespace test2. Notice here that the role binding is linking the role from test2 and the service account from test:
+	-> This works, granting the service account access to resources outside of the namespace the service account was created in:
+	-> Note that the roleRef property does not have a namespace field. This is the RoleRef 
+	-> The implication here is that a role binding can only reference a role in the same namespace.
+
+
+Scenario 3: ClusterRole and RoleBinding
+
+	-> As noted earlier, cluster roles do not belong to a namespace. This means the cluster role does not scope permission to a single namespace.
+	-> However, when a cluster role is linked to a service account via a role binding, the cluster role permissions only apply to the namespace in which the role binding has been 
+	   created.
+	-> Here we create a role binding in namespace test3, linking our service account to the cluster role clusteradmin:
+	-> Our service account now has access to the resources in the test3 namespace:
+	-> But it does not have access to other namespaces:
+	
+	
+Scenario 4: ClusterRole and ClusterRoleBinding
+
+	-> In our final scenario, we’ll create a cluster role binding to link the cluster role to our service account:
+	-> Note again the lack of a namespace field on the roleRef. This implies that a cluster role binding cannot identify a role to link to, because roles belong in namespaces, 
+	   and cluster role bindings (along with the cluster roles they reference) are not namespaced.
+	-> Despite the fact that neither the cluster role nor the cluster role binding defined any namespaces, our service account now has access to everything:
+	
