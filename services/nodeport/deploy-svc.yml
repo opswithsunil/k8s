@@ -41,6 +41,25 @@ spec:
 
 ---
 
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myingress
+  annotations:
+    konghq.com/strip-path: "true"
+    kubernetes.io/ingress.class: kong
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: mysvc
+            port:
+              number: 80
+
 # apiVersion: networking.k8s.io/v1
 # kind: Ingress
 # metadata:
