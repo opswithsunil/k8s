@@ -1,0 +1,15 @@
+Basic Authentication Plugin - This plugin provides simple username/password authentication for your APIs. It requires the client to send a Authorization header with the Basic scheme, containing the base64-encoded username and password.
+
+JWT Authentication Plugin - This plugin allows you to authenticate clients using JSON Web Tokens (JWT). It verifies the JWT signature and validates the token's claims, such as expiration and issuer.
+
+OAuth 2.0 Plugin - This plugin provides an implementation of the OAuth 2.0 authorization framework. It allows clients to authenticate using OAuth 2.0 flows such as Authorization Code, Implicit, Client Credentials, and Resource Owner Password Credentials.
+
+Key Authentication Plugin - This plugin allows you to authenticate clients using an API key. It requires the client to send an apikey query parameter or a custom header containing the API key.
+
+To configure authentication plugins in Kong, you need to create a KongPlugin resource with the appropriate configuration. For example, to enable basic authentication, you can create a KongPlugin with the following YAML configuration:
+
+This configuration enables basic authentication and sets the realm to "Protected API". The hide_credentials option specifies whether to hide the username and password in the response headers, and the anonymous option specifies a fallback credential for unauthenticated requests.
+
+You can associate the KongPlugin with a KongConsumer resource to restrict access to specific consumers or apply it globally to all requests.
+
+Overall, Kong provides a flexible and customizable way to authenticate clients and secure your APIs.
