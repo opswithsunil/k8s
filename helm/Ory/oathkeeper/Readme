@@ -1,0 +1,85 @@
+"ory/authkeeper" is a legacy project that has been deprecated in favor of ORY Oathkeeper, which is a cloud-native Identity and Access Proxy (IAP) that provides centralized authentication and authorization for your APIs, microservices, and web applications.
+
+Here are the steps to install and run Oathkeeper in Kubernetes:
+
+1. First, create a Kubernetes cluster if you don't have one already.
+
+2. Create a new namespace for Oathkeeper:
+
+        kubectl create namespace oathkeeper
+
+3. Deploy Oathkeeper using the Helm package manager:
+
+        helm repo add ory https://k8s.ory.sh/helm/charts
+        helm install --namespace oathkeeper --create-namespace ory/oathkeeper --version 0.38.3
+
+    This will deploy Oathkeeper with the default configuration, including the Kubernetes Ingress Controller.
+
+4. Create an example API using Kubernetes Deployments and Services. For example, you can deploy a simple "hello world" application:
+
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+        name: hello-world
+        labels:
+            app: hello-world
+        spec:
+        replicas: 1
+        selector:
+            matchLabels:
+            app: hello-world
+        template:
+            metadata:
+            labels:
+                app: hello-world
+            spec:
+            containers:
+            - name: hello-world
+                image: gcr.io/google-samples/hello-app:1.0
+                ports:
+                - containerPort: 8080
+
+        ---
+        apiVersion: v1
+        kind: Service
+        metadata:
+        name: hello-world
+        spec:
+        selector:
+            app: hello-world
+        ports:
+        - name: http
+            port: 80
+            targetPort: 8080
+
+5. Create an Oathkeeper rule that protects the API using the oathkeeper-rules.yaml file:
+
+        apiVersion: oathkeeper.ory.sh/v1alpha1
+        kind: Rule
+        metadata:
+        name: hello-world
+        spec:
+        upstream:
+            url: http://hello-world
+        match:
+            url: /hello
+            methods:
+            - GET
+        authorizer:
+            handler:
+            name: allow
+
+    This rule allows GET requests to the /hello endpoint of the hello-world API. You can create more complex rules for your specific use case.
+
+6. Apply the Oathkeeper rule to the cluster:
+ 
+        kubectl apply -f oathkeeper-rules.yaml
+
+7. Test the API by making a request to the protected endpoint:
+
+        curl http://<INGRESS_IP>/hello
+
+
+Replace <INGRESS_IP> with the IP address of your Kubernetes Ingress controller.
+
+That's it! You now have a Kubernetes cluster running Oathkeeper, protecting your API with centralized authentication and authorization.
