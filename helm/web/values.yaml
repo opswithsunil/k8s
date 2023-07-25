@@ -1,9 +1,11 @@
 web:
-  podname: web
-  replicas: 2
+  podname: ubuntu
+  replicas: 1
   labels: web
+  command: 'while true; do echo hello i am from env container; sleep 5; done'
 
 service:
   svc_pod_name: mysvc
   svc_port: 80
   type: NodePort
+

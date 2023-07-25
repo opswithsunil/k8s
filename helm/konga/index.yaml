@@ -1,0 +1,22 @@
+apiVersion: v1
+entries:
+  konga:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2023-06-20T17:25:35.849755145+05:30"
+    description: A Helm chart for Kubernetes
+    digest: 13663a2bd3e5f6285fd5275ac217fe7ee90309b6cde62acbeefa83c2c333e44c
+    name: konga
+    urls:
+    - https://lakshanmamalgaha96.github.io/konga-helm/konga-1.1.0.tgz
+    version: 1.1.0
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2023-06-20T17:25:35.849476364+05:30"
+    description: A Helm chart for Kubernetes
+    digest: 7a86b10611be170bb9bda34cac62a78b9aa501de9d44dd8e965144297757b1f1
+    name: konga
+    urls:
+    - https://lakshanmamalgaha96.github.io/konga-helm/konga-1.0.0.tgz
+    version: 1.0.0
+generated: "2023-06-20T17:25:35.849106652+05:30"

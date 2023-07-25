@@ -1,0 +1,76 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    pv.kubernetes.io/provisioned-by: file.csi.azure.com
+  name: azurefilePV
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: azurefile-csi
+  csi:
+    driver: file.csi.azure.com
+    readOnly: false
+    # make sure this volumeid is unique for every identical share in the cluster
+    volumeHandle: /subscriptions/40f34c18-cdd8-4a8b-bb7e-af540be2b68a/resourcegroups/rg-askluna-dev-001/providers/microsoft.compute/disks/ms-backend-dev-fileshare   # /subscriptions/{sub-id}/resourcegroups/{group-name}/providers/microsoft.compute/disks/{disk-id}        
+    # volumeAttributes:
+    #   resourceGroup: rg-askluna-dev-001  # optional, only set this when storage account is not in the same resource group as node
+    #   shareName: ms-backend-dev-fileshare
+    nodeStageSecretRef:
+      name: azure-secret
+      namespace: askluna-dev
+  mountOptions:
+    - dir_mode=0777
+    - file_mode=0777
+    - uid=0
+    - gid=0
+    - mfsymlinks
+    - cache=strict
+    - nosharesock
+    - nobrl
+
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  namespace: askluna-dev
+  name: askluna-azure-fileshare-pv
+spec:
+  capacity:
+    storage: 10Gi  
+  storageClassName: azurefile-csi
+  accessModes:
+    - ReadWriteMany
+  azureFile:
+    secretName: askluna-azure-file-share-secret
+    shareName: ms-backend-dev-fileshare
+    readOnly: false
+  mountOptions:
+    - dir_mode=0777
+    - file_mode=0777
+    - uid=0
+    - gid=0
+    - mfsymlinks
+    - cache=strict
+    - nosharesock
+    - nobrl
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: askluna-dev
+  name: askluna-azure-fileshare-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: azurefile-csi
+  resources:
+    requests:
+      storage: 10Gi  

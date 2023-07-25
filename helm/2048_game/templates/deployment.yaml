@@ -7,18 +7,18 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: app-2048
-  replicas: 5
+  replicas: 1
   template:
     metadata:
       labels:
         app.kubernetes.io/name: app-2048
     spec:
       containers:
-      - image: public.ecr.aws/l6m2t8p7/docker-2048:latest
+      - image: sunilkumawat/dinosaur:v1
         imagePullPolicy: Always
         name: app-2048
         ports:
-          - containerPort: 80
+          - containerPort: 3000
         resources:
           limits:
             memory: "100Mi"
@@ -42,6 +42,33 @@ spec:
     spec:
       containers:
       - image: nginx:latest
+        imagePullPolicy: Always
+        name: webserver
+        ports:
+          - containerPort: 80
+        resources:
+          limits:
+            memory: "100Mi"
+            cpu: "200m"
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: greennginx
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: greenwebserver
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: greenwebserver
+    spec:
+      containers:
+      - image: sunilkumawat/green_webpage:v2
         imagePullPolicy: Always
         name: webserver
         ports:

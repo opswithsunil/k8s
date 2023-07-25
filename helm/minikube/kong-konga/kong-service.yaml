@@ -1,0 +1,23 @@
+# kong-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: kong
+  namespace: kong-system
+spec:
+  type: LoadBalancer
+  ports:
+    - name: proxy
+      protocol: TCP
+      port: 80
+      targetPort: 8000
+    - name: proxy-ssl
+      protocol: TCP
+      port: 443
+      targetPort: 8443
+    - name: admin
+      protocol: TCP
+      port: 8001
+      targetPort: 8001
+  selector:
+    app: kong
