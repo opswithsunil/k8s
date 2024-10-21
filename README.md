@@ -1,4 +1,4 @@
-### Check Permissions
+### Check Permissions of current User
 Ensure that your user has the necessary permissions for creating RoleBindings in the kube-system namespace. You can check your permissions by running the following command:
 
 ```bash
@@ -37,4 +37,17 @@ Inspect resource utilization, configuration, and replication of pods for storage
 
 ```bash
 kubectl get CSIDriver,Deployment,DaemonSet,Pods -n gcs-fuse-csi-driver
+```
+
+
+## Enable the Cloud Storage Fuse CSI driver using CLi
+
+```bash
+gcloud services enable storage.googleapis.com
+```
+```bash
+gcloud container clusters update <cluster name> --workload-pool=<project id>.svc.id.goog --zone <region>
+```
+```bash
+gcloud container clusters update <cluster_name> --zone <region> --update-addons=GcsFuseCsiDriver=ENABLED
 ```
