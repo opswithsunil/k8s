@@ -6,7 +6,7 @@ kubectl auth can-i create rolebindings --namespace=kube-system
 ```
 # GCP CSI Driver
 
-### CSIDriver:
+### CSI Driver:
 
 This retrieves information about the CSI (Container Storage Interface) Driver objects in the cluster.
 Use case: Useful for verifying the installation or health of a CSI driver, such as the Google Cloud Storage (GCS) Fuse CSI Driver in this case. The CSI driver enables Kubernetes to use GCS buckets as storage volumes.
