@@ -1,0 +1,43 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /v3
+        pathType: Prefix
+        backend:
+          service:
+            name: dino
+            port:
+              number: 80
+      - path: /v2
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: hello-world-2
+            port:
+              number: 80
+      - path: /v1
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: hello-world-1
+            port:
+              number: 60000
+      - path: /v4
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: react
+            port:
+              number: 80
+
+
+
