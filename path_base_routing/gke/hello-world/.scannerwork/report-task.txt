@@ -1,0 +1,6 @@
+projectKey=test-email
+serverUrl=https://centralized-sonarqube.thewitslab.com
+serverVersion=9.9.8.100196
+dashboardUrl=https://centralized-sonarqube.thewitslab.com/dashboard?id=test-email
+ceTaskId=AZbZGCbzCJdhSP42BUAh
+ceTaskUrl=https://centralized-sonarqube.thewitslab.com/api/ce/task?id=AZbZGCbzCJdhSP42BUAh
