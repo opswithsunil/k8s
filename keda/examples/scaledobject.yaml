@@ -1,0 +1,25 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: cpu-scaledobject
+  namespace: dev
+spec:
+  maxReplicaCount: 5
+  minReplicaCount: 1
+  scaleTargetRef: 
+    name: nginx-deployment
+  triggers:
+  - type: cpu
+    metricType: Utilization
+    metadata:
+      value: "20"  
+  - type: memory
+    metricType: Utilization
+    metadata:
+      value: "20"
+  - type: http
+    metadata:
+      host: nginx.dev.svc.cluster.local          # Hostname used by KEDA HTTP add-on
+      path: /                           # Path you want to monitor
+      targetPendingRequests: "10"       # Scale up if more than 10 concurrent requests
+      cooldownPeriod: "60"              # Wait 60 seconds before scaling down
